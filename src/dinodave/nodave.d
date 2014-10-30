@@ -5,8 +5,8 @@ import core.stdc.stdio;
 import core.stdc.stdlib;
 
 enum daveProtoISOTCP	= 122;	/* ISO over TCP */
-enum daveSpeed9k =  0;
-enum daveSpeed19k  = 1;
+enum daveSpeed9k = 0;
+enum daveSpeed19k = 1;
 enum daveSpeed187k = 2;
 enum daveSpeed500k = 3;
 enum daveSpeed1500k = 4;
@@ -90,11 +90,14 @@ void _daveDumpPDU(PDU* p);
 void _daveDump(char* name, ubyte* b, int len);
 char* daveBlockName(ubyte bn);
 char* daveAreaName(ubyte n);
+
 short daveSwapIed_16(short ff);
 int daveSwapIed_32(int ff);
-float daveGetFloatAt(daveConnection* dc, int pos);
 float toPLCfloat(float ff);
 int daveToPLCfloat(float ff);
+
+// helper
+// ---------
 int daveGetS8from(ubyte* b);
 int daveGetU8from(ubyte* b);
 int daveGetS16from(ubyte* b);
@@ -102,19 +105,6 @@ int daveGetU16from(ubyte* b);
 int daveGetS32from(ubyte* b);
 uint daveGetU32from(ubyte* b);
 float daveGetFloatfrom(ubyte* b);
-int daveGetS8(daveConnection* dc);
-int daveGetU8(daveConnection* dc);
-int daveGetS16(daveConnection* dc);
-int daveGetU16(daveConnection* dc);
-int daveGetS32(daveConnection* dc);
-uint daveGetU32(daveConnection* dc);
-float daveGetFloat(daveConnection* dc);
-int daveGetS8At(daveConnection* dc, int pos);
-int daveGetU8At(daveConnection* dc, int pos);
-int daveGetS16At(daveConnection* dc, int pos);
-int daveGetU16At(daveConnection* dc, int pos);
-int daveGetS32At(daveConnection* dc, int pos);
-uint daveGetU32At(daveConnection* dc, int pos);
 
 ubyte* davePut8(ubyte* b, int v);
 ubyte* davePut16(ubyte* b, int v);
@@ -125,6 +115,34 @@ void davePut16At(ubyte* b, int pos, int v);
 void davePut32At(ubyte* b, int pos, int v);
 void davePutFloatAt(ubyte* b, int pos, float v);
 
+ubyte daveToBCD(ubyte i);
+ubyte daveFromBCD(ubyte i);
+
+// plc
+// ---------
+int daveGetS8(daveConnection* dc);
+int daveGetU8(daveConnection* dc);
+int daveGetS16(daveConnection* dc);
+int daveGetU16(daveConnection* dc);
+int daveGetS32(daveConnection* dc);
+uint daveGetU32(daveConnection* dc);
+float daveGetFloat(daveConnection* dc);
+
+int daveGetS8At(daveConnection* dc, int pos);
+int daveGetU8At(daveConnection* dc, int pos);
+int daveGetS16At(daveConnection* dc, int pos);
+int daveGetU16At(daveConnection* dc, int pos);
+int daveGetS32At(daveConnection* dc, int pos);
+uint daveGetU32At(daveConnection* dc, int pos);
+float daveGetFloatAt(daveConnection* dc, int pos);
+
+int daveSetBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
+int daveClrBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
+
+int daveReadBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
+int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
+// ---------
+
 float daveGetSeconds(daveConnection* dc);
 float daveGetSecondsAt(daveConnection* dc, int pos);
 int daveGetCounterValue(daveConnection* dc);
@@ -134,14 +152,11 @@ void _daveConstructDoUpload(PDU* p, int uploadID);
 void _daveConstructEndUpload(PDU* p, int uploadID);
 
 int daveGetOrderCode(daveConnection* dc, char* buf);
-int daveReadBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveReadManyBytes(daveConnection* dc, int area, int DBnum, int start, int len, void* buffer);
-int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveWriteManyBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveReadBits(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveWriteBits(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
-int daveSetBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
-int daveClrBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
+
 int daveReadSZL(daveConnection* dc, int ID, int index, void* buf, int buflen);
 int daveListBlocksOfType(daveConnection* dc, ubyte type, daveBlockEntry* buf);
 int daveListBlocks(daveConnection* dc, daveBlockTypeEntry* buf);
@@ -186,6 +201,3 @@ int daveGetProgramBlock(daveConnection* dc, int blockType, int number, char* buf
 int daveReadPLCTime(daveConnection* dc);
 int daveSetPLCTime(daveConnection* dc, ubyte* ts);
 int daveSetPLCTimeToSystime(daveConnection* dc);
-
-ubyte daveToBCD(ubyte i);
-ubyte daveFromBCD(ubyte i);

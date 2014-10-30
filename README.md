@@ -14,6 +14,17 @@ $ make
 ```
 
 On Win32 see also [wiki](https://github.com/o3o/dinodave/wiki/Compiling%20for%20Win32).
+## Testing
+With dub:
+
+```sh
+$ dub --config=unittest
+```
+with make (only for linux):
+
+```sh
+$ make test
+```
 
 # Example usage
 ```D

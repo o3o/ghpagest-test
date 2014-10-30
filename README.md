@@ -18,8 +18,9 @@ On Win32 see also [wiki](https://github.com/o3o/dinodave/wiki/Compiling%20for%20
 With dub:
 
 ```sh
-$ dub --config=unittest
+$ dub test
 ```
+
 with make (only for linux):
 
 ```sh

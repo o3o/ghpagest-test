@@ -16,7 +16,7 @@
          "sourcePaths": ["tests"],
          "mainSourceFile": "tests/app.d",
          "dependencies": {
-            "unit-threaded": "~master"
+            "unit-threaded": ">=0.4.3"
          },
          "excludedSourceFiles": ["src/dinodave/app.d"]
       }

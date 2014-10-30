@@ -1,29 +1,25 @@
-NAME = libdinodave.a
+NAME = ex3 
 VERSION = 0.1.0
 
 ROOT_SOURCE_DIR = src
 SRC = $(getSources) 
-
 SRC_TEST = $(SRC)
-SRC_TEST += $(wildcard tests/*.d)
 
 # Compiler flag
 # -----------
-DFLAGS += -lib
 DFLAGS += -debug #compile in debug code
 #DFLAGS += -g # add symbolic debug info
 #DFLAGS += -w # warnings as errors (compilation will halt)
 DFLAGS += -wi # warnings as messages (compilation will continue)
 DFLAGS += -m64
 
-#DFLAGS_TEST += -unittest
+DFLAGS_TEST += -unittest
 # DFLAGS_TEST += -main -quiet
 
 # Linker flag
 # -----------
-LDFLAGS =-L-lnodave 
-#LDFLAGS += 
-#LDFLAGS += -L-L/usr/lib/
+# LDFLAGS += 
+# LDFLAGS += -L-L/usr/lib/
 
 # Version flag
 # -----------
@@ -38,9 +34,16 @@ PKG_SRC = $(PKG) $(SRC) makefile
 # Libraries
 # -----------
 
-# unit-threaded
+# dinodave
 # -----------
-LIB_TEST += $(D_DIR)/unit-threaded/libunit-threaded.a
-INCLUDES_TEST += -I$(D_DIR)/unit-threaded/source
+LIB += $(D_DIR)/dinodave/bin/libdinodave.a
+INCLUDES += -I$(D_DIR)/dinodave/src
+LDFLAGS =-L-lnodave 
+
+# test 
+# -----------
+LIB_TEST += $(LIB)
+INCLUDES_TEST += $(INCLUDES)
 
 include common.mk
+

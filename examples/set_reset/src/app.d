@@ -36,7 +36,7 @@ private void readTare(IPlc s7) {
    writeln("========");
       
    for (size_t i = 0; i < CAPS; ++i) {
-      writefln("cap %s: %s mg", i, s7.get32);
+      writefln("cap %s: %s mg", i, s7.getS32);
    }
 }
 private void readNet(IPlc s7) {
@@ -45,15 +45,15 @@ private void readNet(IPlc s7) {
    writeln("========");
       
    for (size_t i = 0; i < CAPS; ++i) {
-      writefln("cap %s: %s mg", i, s7.get32);
+      writefln("cap %s: %s mg", i, s7.getS32);
    }
 }
 
 
 private void read(IPlc s7) {
    s7.readBytes(DB, 0, 6);
-   writeln("mode db22.0: ", s7.get16);
-   writeln("number db22.2: ", s7.get16);
-   writeln("trigger db22.4: ", s7.get16);
+   writeln("mode db22.0: ", s7.getS16);
+   writeln("number db22.2: ", s7.getS16);
+   writeln("trigger db22.4: ", s7.getS16);
    writeln();
 }

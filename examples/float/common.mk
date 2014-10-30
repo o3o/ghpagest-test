@@ -1,38 +1,3 @@
-NAME = ex1 
-VERSION = 0.1.0
-
-ROOT_SOURCE_DIR = src
-SRC = $(getSources) 
-SRC_TEST = $(SRC)
-
-# Libraries
-# -----------
-include libraries.mk
-
-# Compiler flag
-# -----------
-DFLAGS += -debug #compile in debug code
-#DFLAGS += -g # add symbolic debug info
-#DFLAGS += -w # warnings as errors (compilation will halt)
-DFLAGS += -wi # warnings as messages (compilation will continue)
-DFLAGS += -m64
-DFLAGS_TEST += -unittest
-# DFLAGS_TEST += -main -quiet
-
-# Linker flag
-# -----------
-# LDFLAGS += 
-# LDFLAGS += -L-L/usr/lib/
-
-# Version flag
-# -----------
-# VERSION_FLAG = -version=use_gtk
-
-# Packages
-# -----------
-PKG = $(wildcard $(BIN)/$(NAME))
-PKG_SRC = $(PKG) $(SRC) makefile
-
 ###############
 # Common part
 ###############
@@ -42,6 +7,9 @@ DMD = dmd
 BASE_NAME = $(basename $(NAME))
 NAME_TEST = $(BASE_NAME)-test 
 DSCAN = $(D_DIR)/Dscanner/bin/dscanner
+MKDIR = mkdir -p
+RM = -rm -f
+getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 
 # Version flag
 # use: make VERS=x
@@ -53,7 +21,7 @@ VERSION_FLAG += $(if $(VERS), -version=$(VERS), )
 all: builddir $(BIN)/$(NAME)
 
 builddir:
-	@mkdir -p $(BIN)
+	@$(MKDIR) $(BIN)
 
 $(BIN)/$(NAME): $(SRC) $(LIB)| builddir
 	$(DMD) $^ $(DFLAGS) $(INCLUDES) $(LDFLAGS) $(VERSION_FLAG) -of$@
@@ -70,7 +38,7 @@ $(BIN)/$(NAME_TEST): $(SRC_TEST) $(LIB_TEST)| builddir
 	$(DMD) $^ $(DFLAGS_TEST) $(INCLUDES_TEST) $(LDFLAGS) $(VERSION_FLAG) -of$@
 
 pkgdir:
-	@mkdir -p pkg
+	$(MKDIR) pkg
 
 pkg: $(PKG) | pkgdir
 	tar -jcf pkg/$(BASE_NAME)-$(VERSION).tar.bz2 $^
@@ -92,11 +60,11 @@ loc: $(SRC)
 	$(DSCAN) --sloc $^
 
 clean:
-	-rm -f $(BIN)/*.o
-	-rm -f $(BIN)/__*
+	$(RM) $(BIN)/*.o
+	$(RM) $(BIN)/__*
 
 clobber:
-	-rm -f $(BIN)/*
+	$(RM) -f $(BIN)/*
 
 var:
 	@echo $(D_DIR):$($(D_DIR))

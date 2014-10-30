@@ -8,5 +8,17 @@
    "authors": ["Orfeo Da Viá"],
    "libs-posix": ["nodave"],
    "sourceFiles-windows-x86_32-dmd": ["lib/libnodave.lib"],
-   "copyFiles": ["lib/libnodave.dll"]
+   "copyFiles": ["lib/libnodave.dll"],
+   "configurations": [
+      { "name": "library"},
+      { "name": "unittest",
+         "targetType": "executable",
+         "sourcePaths": ["tests"],
+         "mainSourceFile": "tests/app.d",
+         "dependencies": {
+            "unit-threaded": "~master"
+         },
+         "excludedSourceFiles": ["src/dinodave/app.d"]
+      }
+   ]
 }

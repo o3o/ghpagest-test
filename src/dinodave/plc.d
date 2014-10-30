@@ -10,20 +10,21 @@ import dinodave.nodave;
 interface IPlc {
    void openConnection();
    void closeConnection();
-   void readBytes(int datablockNumber, int start, int length);
+   void readBytes(in int datablockNumber, in int start, in int length);
    int getU8At(int position);
    int getU16();
    int getU32();
-   int get8At(int position);
-   int get16();
-   int get32();
+   int getS8At(int position);
+   int getS16();
+   int getS32();
+   float getFloat();
    void writeBytes(int datablockNumber, int start, int length, ubyte[] buffer);
 }
 
 class IsoTcp: IPlc {
-   private string ip;
-   private int port;
-   this(string ipAddress, int port = 102) {
+   private immutable(string) ip;
+   private immutable(int) port;
+   this(in string ipAddress, in int port = 102) {
       assert(ipAddress.length > 0);
       ip = ipAddress;
 
@@ -64,7 +65,7 @@ class IsoTcp: IPlc {
       //closeSocket(fds.rfd);
    }
 
-   void readBytes(int datablockNumber, int start, int length) {
+   void readBytes(in int datablockNumber, in int start, in int length) {
       int err = daveReadBytes(dc, daveDB, datablockNumber, start, length, null);
       if (err != 0) {
          string strErr = to!string(daveStrerror(err));
@@ -76,9 +77,10 @@ class IsoTcp: IPlc {
    int getU16() { return daveGetU16(dc); }
    int getU32() { return daveGetU32(dc); }
 
-   int get8At(int position) { return daveGetS8At(dc, position); }
-   int get16() { return daveGetS16(dc); }
-   int get32() { return daveGetS32(dc); }
+   int getS8At(int position) { return daveGetS8At(dc, position); }
+   int getS16() { return daveGetS16(dc); }
+   int getS32() { return daveGetS32(dc); }
+   float getFloat() { return daveGetFloat(dc); }
 
    void writeBytes(int datablockNumber, int start, int length, ubyte[] buffer) {
       int res = daveWriteBytes(dc, daveDB, datablockNumber, start, length, buffer.ptr);

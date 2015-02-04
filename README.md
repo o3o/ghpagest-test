@@ -7,13 +7,19 @@ With dub:
 ```sh
 $ dub build
 ```
-with make (only for linux):
+with make (_linux_):
 
 ```sh
 $ make
 ```
+(_win32_)
+
+```sh
+$ make -f makefile.win32
+```
 
 On Win32 see also [wiki](https://github.com/o3o/dinodave/wiki/Compiling%20for%20Win32).
+
 ## Testing
 With dub:
 

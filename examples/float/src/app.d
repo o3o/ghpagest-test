@@ -7,16 +7,23 @@ void main(string[] args) {
    enum DB = 23;
    enum ADDR = 82;
 
-   try {
-      auto s7 = new IsoTcp(IP);
-      s7.openConnection();
+   string ip = IP;
+   if (args.length > 1) {
+      ip = args[1];
+   }
 
+   try {
+      writeln("use ip ", ip);
+
+      auto s7 = new IsoTcp(ip);
+      s7.openConnection();
       scope(exit) s7.closeConnection();
+
       float f = 19.64;
       ubyte[] bufferLE = [0xb8, 0x1e, 0x9d, 0x41];
       ubyte[] bufferBE = [0x41, 0x9d, 0x1e, 0xb8];
 
-      
+
       s7.writeBytes(DB, ADDR, 4, bufferBE);
 
       ubyte[4] swappedF = nativeToBigEndian(64.19f);

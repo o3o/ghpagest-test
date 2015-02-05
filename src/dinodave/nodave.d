@@ -79,6 +79,7 @@ struct daveResultSet {
 }
 
 char* daveStrerror(int code);
+
 void daveStringCopy(char* intString, char* extString);
 void daveSetDebug(int nDebug);
 int daveGetDebug();

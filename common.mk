@@ -16,7 +16,7 @@ getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 # -----------
 VERSION_FLAG += $(if $(VERS), -version=$(VERS), )
 
-.PHONY: all clean clobber test run pkg pkgsrc tags
+.PHONY: all clean clobber test testv run pkg pkgsrc tags syn style loc var ver help
 
 all: builddir $(BIN)/$(NAME)
 
@@ -31,8 +31,13 @@ run: all
 
 ## se si usa unit_threaded
 ## make test T=nome_test
-test: $(BIN)/$(NAME_TEST)
+test: build_test
 	@$(BIN)/$(NAME_TEST) $(T)
+
+testv: build_test
+	@$(BIN)/$(NAME_TEST) $(T) -d
+
+build_test: $(BIN)/$(NAME_TEST)
 
 $(BIN)/$(NAME_TEST): $(SRC_TEST) $(LIB_TEST)| builddir
 	$(DMD) $^ $(DFLAGS_TEST) $(INCLUDES_TEST) $(LDFLAGS) $(VERSION_FLAG) -of$@
@@ -66,19 +71,14 @@ clean:
 clobber:
 	$(RM) -f $(BIN)/*
 
-help:
-	@echo "run      Compiles ad runs program"
-	@echo "tags     Generates ctags information"
-	@echo "clean    Cleans object files"
-	@echo "clobber  Cleans all bin directory"
-	@echo "loc      Prints the number of logical lines of code"
-	@echo "style    Checks style"
-	@echo "syn      Checks syntax"
+ver:
+	@echo $(VERSION)
 
 var:
-	@echo $(D_DIR):$($(D_DIR))
+	@echo D_DIR:$(D_DIR)
 	@echo SRC:$(SRC)
 	@echo INCLUDES: $(INCLUDES)
+	@echo LIB: $(LIB)
 	@echo
 	@echo DFLAGS: $(DFLAGS)
 	@echo LDFLAGS: $(LDFLAGS)
@@ -87,4 +87,24 @@ var:
 	@echo NAME_TEST: $(NAME_TEST)
 	@echo SRC_TEST: $(SRC_TEST)
 	@echo INCLUDES_TEST: $(INCLUDES_TEST)
+	@echo LIB_TEST: $(LIB_TEST)
+	@echo
 	@echo T: $(T)
+
+
+# Help Target
+help:
+	@echo "The following are some of the valid targets for this Makefile:"
+	@echo "... all (the default if no target is provided)"
+	@echo "... test"
+	@echo "... testv"
+	@echo "... run"
+	@echo "... clean"
+	@echo "... clobber"
+	@echo "... pkg"
+	@echo "... pkgsrc"
+	@echo "... tags"
+	@echo "... style"
+	@echo "... syn"
+	@echo "... loc"
+	@echo "... var"

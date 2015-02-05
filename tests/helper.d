@@ -49,3 +49,29 @@ void testBcdToDec() {
    (0xA).toBCD().shouldEqual(16);
    (11).toBCD().shouldEqual(17);
 } 
+
+void testStrerrr() {
+   strerror(0x8000).shouldEqual("function already occupied.");
+
+   strerror(0x8001).shouldEqual("not allowed in current operating status.");
+   strerror(0x8101).shouldEqual("hardware fault.");
+   strerror(0x8103).shouldEqual("object access not allowed.");
+   strerror(0x8104).shouldEqual("context is not supported. Step7 says:Function not implemented or error in telgram.");
+   strerror(0x8105).shouldEqual("invalid address.");
+   strerror(0x8106).shouldEqual("data type not supported.");
+   strerror(0x8107).shouldEqual("data type not consistent.");
+   strerror(0x810A).shouldEqual("object does not exist.");
+   strerror(0x8500).shouldEqual("incorrect PDU size.");
+   strerror(0x8702).shouldEqual("address invalid.");
+   strerror(0xd201).shouldEqual("block name syntax error.");
+   strerror(0xd202).shouldEqual("syntax error function parameter.");
+   strerror(0xd203).shouldEqual("syntax error block type.");
+   strerror(0xd204).shouldEqual("no linked block in storage medium.");
+   strerror(0xd205).shouldEqual("object already exists.");
+   strerror(0xd206).shouldEqual("object already exists.");
+   strerror(0xd207).shouldEqual("block exists in EPROM.");
+   strerror(0xd209).shouldEqual("block does not exist/could not be found.");
+   strerror(0xd20e).shouldEqual("no block present.");
+   strerror(0xd210).shouldEqual("block number too big.");
+}
+

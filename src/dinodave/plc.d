@@ -10,6 +10,19 @@ import dinodave.nodave;
 interface IPlc {
    void openConnection();
    void closeConnection();
+   /**
+   * Reads a sequence of bytes from PLC memory.
+   *
+   * Params:  param = param description
+   *     DB = The number of a data block
+   *     start = The address of the first byte in the block.
+   *     length = The number of bytes to read.
+   *			 
+   *
+   * Returns: The function returns 0 on success. 
+   * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened. 
+   * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
+   */
    void readBytes(in int DB, in int start, in int length);
    int getS8();
    int getU8();
@@ -78,12 +91,16 @@ class IsoTcp: IPlc {
    }
 
    /**
-     Reads a sequence of bytes from PLC memory.
-
-     Params:  
-        DB = The number of a data block
-        start = The address of the first byte in the block.
-        length = The number of bytes to read.
+    * Reads a sequence of bytes from PLC memory.
+    *
+    * Params:  
+    *    DB = The number of a data block
+    *    start = The address of the first byte in the block.
+    *    length = The number of bytes to read.
+    *
+    * Returns: The function returns 0 on success. 
+    * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened. 
+    * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
     */
    void readBytes(in int DB, in int start, in int length) {
       int err = daveReadBytes(dc, daveDB, DB, start, length, null);
@@ -125,12 +142,12 @@ class IsoTcp: IPlc {
    }
 
    /**
-     Write a sequence of bytes from a buffer to PLC memory.
-     Params:  
-        DB = The number of a data block
-        start = The address of the first byte in the block.
-        length = The number of bytes to write.
-        buffer = Buffer to write.
+    * Write a sequence of bytes from a buffer to PLC memory.
+    * Params:  
+    * DB = The number of a data block
+    * start = The address of the first byte in the block.
+    * length = The number of bytes to write.
+    * buffer = Buffer to write.
     */
    void writeBytes(int DB, int start, int length, ubyte[] buffer) {
       int res = daveWriteBytes(dc, daveDB, DB, start, length, buffer.ptr);

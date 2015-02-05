@@ -4,7 +4,7 @@ VERSION = 0.2.0
 ROOT_SOURCE_DIR = src
 SRC = $(getSources) 
 
-SRC_TEST = $(SRC)
+SRC_TEST = $(filter-out $(ROOT_SOURCE_DIR)/app.d, $(SRC)) 
 SRC_TEST += $(wildcard tests/*.d)
 
 # Compiler flag

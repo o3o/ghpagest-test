@@ -78,23 +78,6 @@ struct daveResultSet {
    daveResult* results;
 }
 
-char* daveStrerror(int code);
-void daveStringCopy(char* intString, char* extString);
-void daveSetDebug(int nDebug);
-int daveGetDebug();
-daveInterface* daveNewInterface(_daveOSserialType nfd, const(char)* nname, int localMPI, int protocol, int speed);
-daveConnection* daveNewConnection(daveInterface* di, int MPI, int rack, int slot);
-int daveGetResponse(daveConnection* dc);
-int daveSendMessage(daveConnection* dc, PDU* p);
-void _daveDumpPDU(PDU* p);
-void _daveDump(char* name, ubyte* b, int len);
-char* daveBlockName(ubyte bn);
-char* daveAreaName(ubyte n);
-
-short daveSwapIed_16(short ff);
-int daveSwapIed_32(int ff);
-float toPLCfloat(float ff);
-int daveToPLCfloat(float ff);
 
 // helper
 // ---------
@@ -141,6 +124,7 @@ int daveClrBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
 
 int daveReadBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
+int daveReadPLCTime(daveConnection* dc);
 // ---------
 
 float daveGetSeconds(daveConnection* dc);
@@ -198,6 +182,24 @@ int daveGetErrorOfResult(daveResultSet*, int number);
 int daveForceDisconnectIBH(daveInterface* di, int src, int dest, int mpi);
 int daveResetIBH(daveInterface* di);
 int daveGetProgramBlock(daveConnection* dc, int blockType, int number, char* buffer, int* length);
-int daveReadPLCTime(daveConnection* dc);
 int daveSetPLCTime(daveConnection* dc, ubyte* ts);
 int daveSetPLCTimeToSystime(daveConnection* dc);
+
+char* daveStrerror(int code);
+void daveStringCopy(char* intString, char* extString);
+void daveSetDebug(int nDebug);
+int daveGetDebug();
+daveInterface* daveNewInterface(_daveOSserialType nfd, const(char)* nname, int localMPI, int protocol, int speed);
+daveConnection* daveNewConnection(daveInterface* di, int MPI, int rack, int slot);
+int daveGetResponse(daveConnection* dc);
+int daveSendMessage(daveConnection* dc, PDU* p);
+void _daveDumpPDU(PDU* p);
+void _daveDump(char* name, ubyte* b, int len);
+char* daveBlockName(ubyte bn);
+char* daveAreaName(ubyte n);
+
+short daveSwapIed_16(short ff);
+int daveSwapIed_32(int ff);
+float toPLCfloat(float ff);
+int daveToPLCfloat(float ff);
+

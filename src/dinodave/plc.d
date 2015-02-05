@@ -31,6 +31,7 @@ interface IPlc {
    void clearBit(in int DB, in int byteAddress, in int bitAddress);
 
    void writeBytes(int DB, int start, int length, ubyte[] buffer);
+   int readPLCTime();
 }
 
 class IsoTcp: IPlc {
@@ -138,6 +139,11 @@ class IsoTcp: IPlc {
          throw new NodaveException("Error no " ~ to!string(res));
       }
    }
+
+   int readPLCTime() {
+      return daveReadPLCTime(dc);
+   }
+   
 }
 
 class NodaveException: Exception {

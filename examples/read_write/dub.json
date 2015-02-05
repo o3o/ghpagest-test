@@ -1,15 +1,15 @@
 {
    "name": "ex0",
-   "description": "Simple example binding for D",
+   "description": "Read write example",
    "copyright": "Copyright © 2014, o3o",
    "license": "LGPL License",
    "targetType": "executable",
    "targetPath": "bin",
    "authors": ["Orfeo Da Viá"],
    "libs-posix": ["nodave"],
-   "sourceFiles-windows-x86_32-dmd": ["lib/libnodave.lib"],
+   "sourceFiles-windows-x86_32-dmd": ["../../lib/libnodave.lib"],
    "copyFiles": ["../../lib/libnodave.dll"],
    "dependencies": {
-
+      "dinodave": {"path": "../../bin/"}
    }
 }

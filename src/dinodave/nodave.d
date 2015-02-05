@@ -78,7 +78,6 @@ struct daveResultSet {
    daveResult* results;
 }
 
-
 // helper
 // ---------
 int daveGetS8from(ubyte* b);

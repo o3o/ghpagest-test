@@ -1,15 +1,15 @@
 # NON usare make di Mars ma GnuMake
 # Non e' previsto test pkg
-NAME = float.exe
+NAME = dinodave.lib
 VERSION = 0.1.0
 
-SRC = $(wildcard src/*.d)
-D_DIR = ..\..\..
+SRC = $(wildcard src/dinodave/*.d)
+D_DIR = ..\..
 
 # Library
 # -----------
-LIB_DIR = ..\..\lib
-
+LIB_DIR = lib
+LIB = $(LIB_DIR)/libnodave.lib
 # Compiler flag
 # -----------
 #DFLAGS += -debug #compile in debug code
@@ -17,13 +17,11 @@ LIB_DIR = ..\..\lib
 #DFLAGS += -w # warnings as errors (compilation will halt)
 DFLAGS += -wi # warnings as messages (compilation will continue)
 DFLAGS += -m32
+DFLAGS += -lib
 
 # Linker flag
 # -----------
 #LDFLAGS += 
-
-LIB += $(D_DIR)/dinodave/bin/dinodave.lib
-INCLUDES += -I$(D_DIR)/dinodave/src
 
 #talvolta ci  sono errori se non si eliminano i file oggetto
 DEFAULT: clobber all inst

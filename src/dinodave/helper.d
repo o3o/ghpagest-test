@@ -1,5 +1,11 @@
+/**
+* Helper functions
+*/
 module dinodave.helper;
+
+import std.conv;
 import std.exception;
+
 import dinodave.nodave;
 
 void put8(ubyte[] buffer, in int value) {
@@ -37,6 +43,7 @@ void putFloatAt(ubyte[] buffer, in int pos, in float value) {
    enforce(pos < (buffer.length - 3) && pos >= 0);
    davePutFloatAt(buffer.ptr, pos, value);
 }
+
 ubyte toBCD(ubyte i) {
    return daveToBCD(i);
 }
@@ -44,3 +51,18 @@ ubyte toBCD(ubyte i) {
 ubyte fromBCD(ubyte i) {
    return daveFromBCD(i);
 }
+
+/**
+* Get error code description
+*
+* Params:  code = error code
+*			 
+*
+* Returns: description of error
+* Generally, positive error codes represent errors reported by the PLC, 
+* while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
+*
+*/
+string strerror(int code) {
+   return to!(string)(daveStrerror(code));
+} 

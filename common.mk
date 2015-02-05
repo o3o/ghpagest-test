@@ -3,12 +3,15 @@
 ###############
 DEFAULT: all
 BIN = bin
-DMD = dmd
+DC = dmd
 BASE_NAME = $(basename $(NAME))
 NAME_TEST = $(BASE_NAME)-test 
 DSCAN = $(D_DIR)/Dscanner/bin/dscanner
 MKDIR = mkdir -p
 RM = -rm -f
+BITS ?= $(shell getconf LONG_BIT)
+DCFLAGS += -m$(BITS)
+
 getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 
 # Version flag
@@ -16,7 +19,7 @@ getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 # -----------
 VERSION_FLAG += $(if $(VERS), -version=$(VERS), )
 
-.PHONY: all clean clobber test testv run pkg pkgsrc tags syn style loc var ver help
+.PHONY: all clean clobber test run pkg pkgsrc tags syn style loc var ver help
 
 all: builddir $(BIN)/$(NAME)
 
@@ -24,7 +27,7 @@ builddir:
 	@$(MKDIR) $(BIN)
 
 $(BIN)/$(NAME): $(SRC) $(LIB)| builddir
-	$(DMD) $^ $(DFLAGS) $(INCLUDES) $(LDFLAGS) $(VERSION_FLAG) -of$@
+	$(DC) $^ $(DCFLAGS) $(DCFLAGS_IMPORT) $(DCFLAGS_LINK) $(VERSION_FLAG) -of$@
 
 run: all
 	$(BIN)/$(NAME)
@@ -34,13 +37,10 @@ run: all
 test: build_test
 	@$(BIN)/$(NAME_TEST) $(T)
 
-testv: build_test
-	@$(BIN)/$(NAME_TEST) $(T) -d
-
 build_test: $(BIN)/$(NAME_TEST)
 
 $(BIN)/$(NAME_TEST): $(SRC_TEST) $(LIB_TEST)| builddir
-	$(DMD) $^ $(DFLAGS_TEST) $(INCLUDES_TEST) $(LDFLAGS) $(VERSION_FLAG) -of$@
+	$(DC) $^ $(DCFLAGS_TEST) $(DCFLAGS_IMPORT_TEST) $(DCFLAGS_LINK) $(VERSION_FLAG) -of$@
 
 pkgdir:
 	$(MKDIR) pkg
@@ -77,16 +77,16 @@ ver:
 var:
 	@echo D_DIR:$(D_DIR)
 	@echo SRC:$(SRC)
-	@echo INCLUDES: $(INCLUDES)
+	@echo DCFLAGS_IMPORT: $(DCFLAGS_IMPORT)
 	@echo LIB: $(LIB)
 	@echo
-	@echo DFLAGS: $(DFLAGS)
-	@echo LDFLAGS: $(LDFLAGS)
+	@echo DCFLAGS: $(DCFLAGS)
+	@echo DCFLAGS_LINK: $(DCFLAGS_LINK)
 	@echo VERSION: $(VERSION_FLAG)
 	@echo
 	@echo NAME_TEST: $(NAME_TEST)
 	@echo SRC_TEST: $(SRC_TEST)
-	@echo INCLUDES_TEST: $(INCLUDES_TEST)
+	@echo DCFLAGS_IMPORT_TEST: $(DCFLAGS_IMPORT_TEST)
 	@echo LIB_TEST: $(LIB_TEST)
 	@echo
 	@echo T: $(T)
@@ -97,7 +97,6 @@ help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... test"
-	@echo "... testv"
 	@echo "... run"
 	@echo "... clean"
 	@echo "... clobber"

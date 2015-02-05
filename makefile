@@ -9,21 +9,21 @@ SRC_TEST += $(wildcard tests/*.d)
 
 # Compiler flag
 # -----------
-DFLAGS += -lib
-DFLAGS += -debug #compile in debug code
-#DFLAGS += -g # add symbolic debug info
-#DFLAGS += -w # warnings as errors (compilation will halt)
-DFLAGS += -wi # warnings as messages (compilation will continue)
-DFLAGS += -m64
+DCFLAGS += -lib
+DCFLAGS += -debug #compile in debug code
+#DCFLAGS += -g # add symbolic debug info
+#DCFLAGS += -w # warnings as errors (compilation will halt)
+DCFLAGS += -wi # warnings as messages (compilation will continue)
+DCFLAGS += -m64
 
-#DFLAGS_TEST += -unittest
-# DFLAGS_TEST += -main -quiet
+#DCFLAGS_TEST += -unittest
+# DCFLAGS_TEST += -main -quiet
 
 # Linker flag
 # -----------
-LDFLAGS =-L-lnodave 
-#LDFLAGS += 
-#LDFLAGS += -L-L/usr/lib/
+DCFLAGS_LINK =-L-lnodave 
+#DCFLAGS_LINK += 
+#DCFLAGS_LINK += -L-L/usr/lib/
 
 # Version flag
 # -----------
@@ -41,6 +41,6 @@ PKG_SRC = $(PKG) $(SRC) makefile
 # unit-threaded
 # -----------
 LIB_TEST += $(D_DIR)/unit-threaded/libunit-threaded.a
-INCLUDES_TEST += -I$(D_DIR)/unit-threaded/source
+DCFLAGS_IMPORT_TEST += -I$(D_DIR)/unit-threaded/source
 
 include common.mk

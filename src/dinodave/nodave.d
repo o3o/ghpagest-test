@@ -123,6 +123,7 @@ int daveClrBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
 
 int daveReadBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
+
 int daveReadPLCTime(daveConnection* dc);
 // ---------
 
@@ -181,6 +182,7 @@ int daveGetErrorOfResult(daveResultSet*, int number);
 int daveForceDisconnectIBH(daveInterface* di, int src, int dest, int mpi);
 int daveResetIBH(daveInterface* di);
 int daveGetProgramBlock(daveConnection* dc, int blockType, int number, char* buffer, int* length);
+
 int daveSetPLCTime(daveConnection* dc, ubyte* ts);
 int daveSetPLCTimeToSystime(daveConnection* dc);
 

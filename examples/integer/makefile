@@ -7,19 +7,19 @@ SRC_TEST = $(SRC)
 
 # Compiler flag
 # -----------
-DFLAGS += -debug #compile in debug code
-#DFLAGS += -g # add symbolic debug info
-#DFLAGS += -w # warnings as errors (compilation will halt)
-DFLAGS += -wi # warnings as messages (compilation will continue)
-DFLAGS += -m64
+DCFLAGS += -debug #compile in debug code
+#DCFLAGS += -g # add symbolic debug info
+#DCFLAGS += -w # warnings as errors (compilation will halt)
+DCFLAGS += -wi # warnings as messages (compilation will continue)
+DCFLAGS += -m64
 
-DFLAGS_TEST += -unittest
-# DFLAGS_TEST += -main -quiet
+DCFLAGS_TEST += -unittest
+# DCFLAGS_TEST += -main -quiet
 
 # Linker flag
 # -----------
-# LDFLAGS += 
-# LDFLAGS += -L-L/usr/lib/
+# DCFLAGS_LINK += 
+# DCFLAGS_LINK += -L-L/usr/lib/
 
 # Version flag
 # -----------
@@ -37,13 +37,13 @@ PKG_SRC = $(PKG) $(SRC) makefile
 # dinodave
 # -----------
 LIB += $(D_DIR)/dinodave/bin/libdinodave.a
-INCLUDES += -I$(D_DIR)/dinodave/src
-LDFLAGS =-L-lnodave 
+DCFLAGS_IMPORT += -I$(D_DIR)/dinodave/src
+DCFLAGS_LINK =-L-lnodave 
 
 # test 
 # -----------
 LIB_TEST += $(LIB)
-INCLUDES_TEST += $(INCLUDES)
+DCFLAGS_IMPORT_TEST += $(DCFLAGS_IMPORT)
 
 include common.mk
 

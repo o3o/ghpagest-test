@@ -1,54 +1,65 @@
-NAME = e0.exe
+# NON usare make di Mars ma GnuMake
+# Non e' previsto test pkg
+NAME = float.exe
 VERSION = 0.1.0
 
 SRC = $(wildcard src/*.d)
-D_DIR = ../../..
-D_DIR_W = $(subst /,\,$(D_DIR))
+D_DIR = ..\..\..
 
 # Library
 # -----------
+LIB_DIR = ..\..\lib
 
-# dinodave
+# Compiler flag
 # -----------
+#DCFLAGS += -debug #compile in debug code
+#DCFLAGS += -g # add symbolic debug info
+#DCFLAGS += -w # warnings as errors (compilation will halt)
+DCFLAGS += -wi # warnings as messages (compilation will continue)
+DCFLAGS += -m32
+
+# Linker flag
+# -----------
+#DCFLAGS_LINK += 
+
 LIB += $(D_DIR)/dinodave/bin/dinodave.lib
-INCLUDES += -I$(D_DIR)/dinodave/src
+DCFLAGS_IMPORT += -I$(D_DIR)/dinodave/src
 
-DFLAGS += -debug #compile in debug code
-DFLAGS += -wi # warnings as messages (compilation will continue)
+#talvolta ci  sono errori se non si eliminano i file oggetto
+DEFAULT: clobber all inst
 
-#LDFLAGS =
-#VERSION_FLAG =
-
-DEFAULT: all
 #################
 BIN = bin
-DMD = dmd
+DC = dmd
+RM = del /Q
+CP = copy /Y
+.PHONY: all clean clobber
 
-.PHONY: all clean clobber 
+all: $(BIN)\$(NAME)
 
-all: $(BIN)/$(NAME) $(BIN)/libnodave.dll
+$(BIN)\$(NAME): $(SRC) $(LIB)
+	$(DC) $^ $(DCFLAGS) $(DCFLAGS_IMPORT) $(DCFLAGS_LINK) -of$@
 
-$(BIN)/libnodave.dll: $(D_DIR)/dinodave/lib/libnodave.dll
-	copy /Y  $(D_DIR_W)\dinodave\lib\libnodave.dll $(BIN)
+inst: $(BIN)\libnodave.dll
 
-$(BIN)/$(NAME): $(SRC) $(LIB)
-	$(DMD) $^ $(DFLAGS) $(INCLUDES) $(LDFLAGS) $(VERSION_FLAG) -of$@
+$(BIN)\libnodave.dll: $(LIB_DIR)\libnodave.dll
+	$(CP) $^ $@
 
-run: all
-	$(BIN)/$(NAME)
+clean:
+	$(RM) $(BIN)\*.obj
+
+clobber:
+	$(RM) $(BIN)\$(NAME)
+	$(RM) $(BIN)\*.obj
 
 var:
-	@echo SRC:
-	@echo $(SRC)
+	@echo SRC: $(SRC)
 	@echo
-	@echo D_DIR_W:
-	@echo $(D_DIR_W)
+	@echo DCFLAGS_IMPORT:
+	@echo $(DCFLAGS_IMPORT)
 	@echo
-	@echo INCLUDES:
-	@echo $(INCLUDES)
-	@echo
-	@echo DFLAGS:
-	@echo $(DFLAGS)
+	@echo DCFLAGS:
+	@echo $(DCFLAGS)
 	@echo
 	@echo VERSION:
 	@echo $(VERSION_FLAG)

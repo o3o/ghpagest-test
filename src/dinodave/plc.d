@@ -4,9 +4,15 @@ import std.conv;
 import std.socket;
 import std.string;
 import std.stdio;
+import std.datetime;
+import std.conv;
 
 import dinodave.nodave;
+import dinodave.helper;
 
+/**
+*  Representing the physical connection to a PLC
+*/
 interface IPlc {
    void openConnection();
    void closeConnection();
@@ -24,20 +30,20 @@ interface IPlc {
    * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
    */
    void readBytes(in int DB, in int start, in int length);
-   int getS8();
-   int getU8();
-   int getS16();
-   int getU16();
+   byte getS8();
+   ubyte getU8();
+   short getS16();
+   ushort getU16();
    int getS32();
-   int getU32();
+   uint getU32();
    float getFloat();
 
-   int getS8At(int position);
-   int getU8At(int position);
-   int getS16At(int position);
-   int getU16At(int position);
+   byte getS8At(int position);
+   ubyte getU8At(int position);
+   short getS16At(int position);
+   ushort getU16At(int position);
    int getS32At(int position);
-   int getU32At(int position);
+   uint getU32At(int position);
    float getFloatAt(int position);
 
    void setBit(in int DB, in int byteAddress, in int bitAddress);
@@ -100,45 +106,45 @@ class IsoTcp: IPlc {
     *    length = The number of bytes to read.
     *
     * Returns: The function returns 0 on success. 
-    * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened. 
-    * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
+    * Nonzero return codes may be passed to `strerror()` to get a textual explanation of what happened. 
+    * Generally, positive error codes represent errors reported by the PLC, 
+    * while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
     */
    void readBytes(in int DB, in int start, in int length) {
       int err = daveReadBytes(dc, daveDB, DB, start, length, null);
       if (err != 0) {
-         string strErr = to!string(daveStrerror(err));
-         throw new NodaveException(strErr);
+         throw new NodaveException(err);
       }
    }
 
-   int getS8() { return daveGetS8(dc); }
-   int getU8() { return daveGetU8(dc); }
-   int getU16() { return daveGetU16(dc); }
-   int getU32() { return daveGetU32(dc); }
-
-   int getS16() { return daveGetS16(dc); }
+   byte getS8() { return to!byte(daveGetS8(dc)); }
+   ubyte getU8() { return to!ubyte(daveGetU8(dc)); }
+   short getS16() { return to!short(daveGetS16(dc)); }
+   ushort getU16() { return to!ushort(daveGetU16(dc)); }
    int getS32() { return daveGetS32(dc); }
+   uint getU32() { return daveGetU32(dc); }
+
    float getFloat() { return daveGetFloat(dc); }
 
-   int getS8At(int position) { return daveGetS8At(dc, position); }
-   int getU8At(int position) { return daveGetU8At(dc, position); }
-   int getS16At(int position) { return daveGetS16At(dc, position); }
-   int getU16At(int position) { return daveGetU16At(dc, position); }
+   byte getS8At(int position) { return to!byte(daveGetS8At(dc, position)); }
+   ubyte getU8At(int position) { return to!ubyte(daveGetU8At(dc, position)); }
+   short getS16At(int position) { return to!short(daveGetS16At(dc, position)); }
+   ushort getU16At(int position) { return to!ushort(daveGetU16At(dc, position)); }
    int getS32At(int position) { return daveGetS32At(dc, position); }
-   int getU32At(int position) { return daveGetU32At(dc, position); }
+   uint getU32At(int position) { return to!uint(daveGetU32At(dc, position)); }
    float getFloatAt(int position) { return daveGetFloatAt(dc, position); }
 
    void setBit(in int DB, in int byteAddress, in int bitAddress) {
       int res = daveSetBit(dc, daveDB, DB, byteAddress, bitAddress);
       if (res != 0) {
-         throw new NodaveException("Error no " ~ to!string(res));
+         throw new NodaveException(res);
       }
    }
 
    void clearBit(in int DB, in int byteAddress, in int bitAddress) {
       int res = daveClrBit(dc, daveDB, DB, byteAddress, bitAddress);
       if (res != 0) {
-         throw new NodaveException("Error no " ~ to!string(res));
+         throw new NodaveException(res);
       }
    }
 
@@ -153,17 +159,53 @@ class IsoTcp: IPlc {
    void writeBytes(int DB, int start, int length, ubyte[] buffer) {
       int res = daveWriteBytes(dc, daveDB, DB, start, length, buffer.ptr);
       if (res != 0) {
-         throw new NodaveException("Error no " ~ to!string(res));
+         throw new NodaveException(res);
       }
    }
 
+   /**
+   * Read PLC data time.
+   *
+   *
+   *
+   * Params:  param = param description
+   *			 
+   *
+   * Returns: return value
+   *
+   * Throws:  Exception 
+   */
    int readPLCTime() {
       return daveReadPLCTime(dc);
    }
-   
+
+   DateTime getPLCTime() {
+      int res = readPLCTime();
+      if (res != 0) {
+         throw new NodaveException(res);
+      }
+
+      getU8(); //???
+      int year = getU8().fromBCD() * 100 + getU8().fromBCD();
+      int month = fromBCD(getU8());
+      int day = getU8().fromBCD;
+      int hour = getU8().fromBCD;
+      int minute = getU8().fromBCD;
+      int second = getU8().fromBCD;
+      return DateTime(year, month, day, hour, minute, second);
+   }
+
+   int setPLCTimeToSystime() {
+      return daveSetPLCTimeToSystime(dc);
+   }
 }
 
 class NodaveException: Exception {
+   this(int errNo){
+      string message = strerror(errNo);
+      this(message);
+   }
+
    this(string message, string file = __FILE__, size_t line = __LINE__, Throwable next = null) {
       super(message, file, line, next);
    }

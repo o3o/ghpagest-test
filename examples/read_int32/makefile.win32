@@ -1,6 +1,6 @@
 # NON usare make di Mars ma GnuMake
 # Non e' previsto test pkg
-NAME = integer.exe
+NAME = int32.exe
 VERSION = 0.1.0
 
 SRC = $(wildcard src/*.d)

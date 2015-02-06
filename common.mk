@@ -19,7 +19,7 @@ getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 # -----------
 VERSION_FLAG += $(if $(VERS), -version=$(VERS), )
 
-.PHONY: all clean clobber test run pkg pkgsrc tags syn style loc var ver help
+.PHONY: all clean clobber test testv run pkg pkgsrc tags syn style loc var ver help
 
 all: builddir $(BIN)/$(NAME)
 
@@ -36,6 +36,9 @@ run: all
 ## make test T=nome_test
 test: build_test
 	@$(BIN)/$(NAME_TEST) $(T)
+
+testv: build_test
+	@$(BIN)/$(NAME_TEST) -d $(T)
 
 build_test: $(BIN)/$(NAME_TEST)
 

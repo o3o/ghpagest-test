@@ -1,17 +1,25 @@
 import std.stdio;
-import dinodave;
 import std.conv;
 import std.bitmanip;
+
+import dinodave;
+
 void main(string[] args) {
    enum string IP = "192.168.221.102";
    enum DB = 23;
    enum ADDR = 2;
 
-   try {
-      auto s7 = new IsoTcp(IP);
-      s7.openConnection();
+   string ip = IP;
+   if (args.length > 1) {
+      ip = args[1];
+   }
 
+
+   try {
+      auto s7 = new IsoTcp(ip);
+      s7.openConnection();
       scope(exit) s7.closeConnection();
+
       ubyte[80] buf;
       enum int BYTES_PER_DINT = 4;
       

@@ -12,25 +12,25 @@ LIB_DIR = ..\..\lib
 
 # Compiler flag
 # -----------
-#DFLAGS += -debug #compile in debug code
-#DFLAGS += -g # add symbolic debug info
-#DFLAGS += -w # warnings as errors (compilation will halt)
-DFLAGS += -wi # warnings as messages (compilation will continue)
-DFLAGS += -m32
+#DCFLAGS += -debug #compile in debug code
+#DCFLAGS += -g # add symbolic debug info
+#DCFLAGS += -w # warnings as errors (compilation will halt)
+DCFLAGS += -wi # warnings as messages (compilation will continue)
+DCFLAGS += -m32
 
 # Linker flag
 # -----------
-#LDFLAGS += 
+#DCFLAGS_LINK += 
 
 LIB += $(D_DIR)/dinodave/bin/dinodave.lib
-INCLUDES += -I$(D_DIR)/dinodave/src
+DCFLAGS_IMPORT += -I$(D_DIR)/dinodave/src
 
 #talvolta ci  sono errori se non si eliminano i file oggetto
 DEFAULT: clobber all inst
 
 #################
 BIN = bin
-DMD = dmd
+DC = dmd
 RM = del /Q
 CP = copy /Y
 .PHONY: all clean clobber
@@ -38,7 +38,7 @@ CP = copy /Y
 all: $(BIN)\$(NAME)
 
 $(BIN)\$(NAME): $(SRC) $(LIB)
-	$(DMD) $^ $(DFLAGS) $(INCLUDES) $(LDFLAGS) -of$@
+	$(DC) $^ $(DCFLAGS) $(DCFLAGS_IMPORT) $(DCFLAGS_LINK) -of$@
 
 inst: $(BIN)\libnodave.dll
 
@@ -55,11 +55,11 @@ clobber:
 var:
 	@echo SRC: $(SRC)
 	@echo
-	@echo INCLUDES:
-	@echo $(INCLUDES)
+	@echo DCFLAGS_IMPORT:
+	@echo $(DCFLAGS_IMPORT)
 	@echo
-	@echo DFLAGS:
-	@echo $(DFLAGS)
+	@echo DCFLAGS:
+	@echo $(DCFLAGS)
 	@echo
 	@echo VERSION:
 	@echo $(VERSION_FLAG)

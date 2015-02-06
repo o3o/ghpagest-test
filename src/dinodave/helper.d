@@ -61,7 +61,6 @@ ubyte fromBCD(ubyte i) {
 * Returns: description of error
 * Generally, positive error codes represent errors reported by the PLC, 
 * while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
-*
 */
 string strerror(int code) {
    return to!(string)(daveStrerror(code));

@@ -28,6 +28,16 @@ void main(string[] args) {
       print(12, s7.getU32);
       print(16, s7.getU32);
       writeln();
+
+      s7.readBytes(DB, 718, 4);
+      print(718, s7.getU16);  
+      print(720, s7.getU16);  
+      enum INIT = 200;
+      enum SIZE = 56;
+      for (int i =23,  0; i < 10; ++i) {
+         s7.readBytes(23, INIT + i * SIZE, SIZE);
+         print(23, INIT + i * SIZE, s7.getU32);
+      }
    } catch(Exception e) {
       writeln(e);
    }
@@ -35,4 +45,8 @@ void main(string[] args) {
 
 void print(int addr, int i0) {
    writefln("db12.%s %s", addr, i0);
+}
+
+void print(int db, int addr, int i0) {
+   writefln("db%s.%s %s", db, addr, i0);
 }

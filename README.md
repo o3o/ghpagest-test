@@ -1,4 +1,6 @@
 # dinodave
+[![Build Status](https://travis-ci.org/o3o/dinodave.svg?branch=master)](https://travis-ci.org/o3o/dinodave)
+
 A simple D binding to [LIBNODAVE, a free library to communicate to Siemens S7 PLCs](https://github.com/netdata/libnodave)
 
 # Compiling
@@ -59,4 +61,4 @@ void main(string[] args) {
 }
 ```
 
-See also directory examples/ and [wiki](https://github.com/o3o/dinodave/wiki/).
+See also directory `examples/` and [wiki](https://github.com/o3o/dinodave/wiki/).

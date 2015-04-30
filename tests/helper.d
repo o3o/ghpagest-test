@@ -80,10 +80,7 @@ void testPut8() {
    buf[0].shouldEqual(0);
    put8(buf, 10);
    buf[0].shouldEqual(10);
-   buf.length.shouldEqual(3);;
+   buf.length.shouldEqual(3);
    put8(buf, 0xFF);
    writeln("e", buf[0]);
-   
 }
-
-

@@ -1,24 +1,29 @@
 {
    "name": "dinodave",
    "description": "A libnodave binding for D",
-   "copyright": "Copyright © 2014, o3o",
    "license": "LGPL License",
-   "targetType": "library",
+   "copyright": "Copyright © 2014, o3o",
+   "authors": [ "Orfeo Da Viá" ],
    "targetPath": "bin",
-   "authors": ["Orfeo Da Viá"],
+   "targetType": "library",
    "libs-posix": ["nodave"],
    "sourceFiles-windows-x86-dmd": ["lib/libnodave.lib"],
    "copyFiles": ["lib/libnodave.dll"],
    "configurations": [
-      { "name": "library"},
-      { "name": "unittest",
+      {
+         "name": "library",
+         "targetType": "library"
+      },
+      {
+         "name": "unittest",
          "targetType": "executable",
+         "targetName": "test-runner",
          "sourcePaths": ["tests"],
          "mainSourceFile": "tests/app.d",
+         "excludedSourceFiles": ["src/app.d"],
          "dependencies": {
-            "unit-threaded": ">=0.4.3"
-         },
-         "excludedSourceFiles": ["src/dinodave/app.d"]
+            "unit-threaded": "~>0.4.7"
+         }
       }
    ]
 }

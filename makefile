@@ -1,46 +1,139 @@
+ #makefile release 0.2.0
 NAME = libdinodave.a
-VERSION = 0.2.0
+PROJECT_VERSION = 0.2.0
 
 ROOT_SOURCE_DIR = src
-SRC = $(getSources) 
+BIN = bin
+SRC = $(getSources)
+BASE_NAME = $(basename $(NAME))
 
-SRC_TEST = $(filter-out $(ROOT_SOURCE_DIR)/app.d, $(SRC)) 
-SRC_TEST += $(wildcard tests/*.d)
+#############
+# Packages  #
+#############
+ZIP = $(BIN)/$(NAME)
+ZIP_SRC = $(ZIP) $(SRC) dub.json README.md CHANGELOG.md makefile $(SRC_TEST)
+ZIP_PREFIX = $(BASE_NAME)-$(PROJECT_VERSION)
 
-# Compiler flag
-# -----------
-DCFLAGS += -lib
-DCFLAGS += -debug #compile in debug code
-#DCFLAGS += -g # add symbolic debug info
-#DCFLAGS += -w # warnings as errors (compilation will halt)
-DCFLAGS += -wi # warnings as messages (compilation will continue)
-DCFLAGS += -m64
+#############
+# Test      #
+#############
+TEST_SOURCE_DIR = tests
+SRC_TEST = $(filter-out $(ROOT_SOURCE_DIR)/App.cs, $(SRC))
+SRC_TEST += $(shell find $(TEST_SOURCE_DIR) -name "*.d")
 
-DCFLAGS_TEST += -unittest
-# DCFLAGS_TEST += -main -quiet
+getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
 
-# Linker flag
-# -----------
-DCFLAGS_LINK =-L-lnodave 
-#DCFLAGS_LINK += 
-#DCFLAGS_LINK += -L-L/usr/lib/
+#############
+## commands #
+#############
+DUB = dub
+DSCAN = $(D_DIR)/Dscanner/bin/dscanner
+MKDIR = mkdir -p
+RM = -rm -f
+UPX = upx --no-progress
 
-# Version flag
-# -----------
-# VERSION_FLAG = -version=use_gtk
+## flags
+DUBFLAGS = -q --combined
 
-# Packages
-# -----------
-PKG = $(wildcard $(BIN)/$(NAME))
-PKG_SRC = $(PKG) $(SRC) makefile
+.PHONY: all release force run test pkgall pkg pkgtar pkgsrc tags style syn loc clean clobber
 
-# -----------
-# Libraries
-# -----------
+DEFAULT: all
 
-# unit-threaded
-# -----------
-LIB_TEST += $(D_DIR)/unit-threaded/libunit-threaded.a
-DCFLAGS_IMPORT_TEST += -I$(D_DIR)/unit-threaded/source
+all:
+	$(DUB) build $(DUBFLAGS)
 
-include common.mk
+release:
+	$(DUB) build -brelease $(DUBFLAGS)
+
+force:
+	$(DUB) build --force $(DUBFLAGS)
+
+run:
+	$(DUB) run $(DUBFLAGS)
+
+test:
+	$(DUB) test $(DUBFLAGS)
+
+upx: $(BIN)/$(NAME)
+	$(UPX) $@
+
+pkgdir:
+	@mkdir -p pkg
+
+pkgall: pkg pkgtar pkgsrc
+
+pkg: pkgdir | pkg/$(ZIP_PREFIX).zip
+
+pkg/$(ZIP_PREFIX).zip: $(ZIP)
+	zip $@ $(ZIP)
+
+pkgtar: pkgdir | pkg/$(ZIP_PREFIX).tar.bz2
+
+pkg/$(ZIP_PREFIX).tar.bz2: $(ZIP)
+	tar -jcf $@ $^
+
+pkgsrc: pkgdir | pkg/$(ZIP_PREFIX)-src.tar.bz2
+
+pkg/$(ZIP_PREFIX)-src.tar.bz2: $(ZIP_SRC)
+	tar -jcf $@ $^
+
+tags: $(SRC)
+	$(DSCAN) --ctags $^ > tags
+
+style: $(SRC)
+	$(DSCAN) --styleCheck $^
+
+syn: $(SRC)
+	$(DSCAN) --syntaxCheck $^
+
+loc: $(SRC)
+	$(DSCAN) --sloc $^
+
+clean:
+	$(DUB) clean
+
+clobber: clean
+	$(RM) $(BIN)/$(NAME)
+
+ver:
+	@echo $(PROJECT_VERSION)
+
+var:
+	@echo NAME:       $(NAME)
+	@echo PRJ_VER:    $(PROJECT_VERSION)
+	@echo BASE_NAME:  $(BASE_NAME)
+	@echo
+	@echo ==== dir ===
+	@echo D_DIR: $(D_DIR)
+	@echo BIN:   $(BIN)
+	@echo ROOT_SOURCE_DIR: $(ROOT_SOURCE_DIR)
+	@echo TEST_SOURCE_DIR: $(TEST_SOURCE_DIR)
+	@echo
+	@echo ==== zip ===
+	@echo ZIP: $(ZIP)
+	@echo ZIP_SRC: $(ZIP_SRC)
+	@echo ZIP_PREFIX: $(ZIP_PREFIX)
+	@echo 
+	@echo ==== src ===
+	@echo SRC:   $(SRC)
+
+# Help Target
+help:
+	@echo "The following are some of the valid targets for this Makefile:"
+	@echo "... all (the default if no target is provided)"
+	@echo "... release Compiles in release mode"
+	@echo "... force  Forces a recompilation"
+	@echo "... test Executes the tests"
+	@echo "... run Builds and runs"
+	@echo "... clean Removes intermediate build files"
+	@echo "... clobber"
+	@echo "... pkg Zip binary"
+	@echo "... pkgtar Tar binary"
+	@echo "... pkgsrc Tar source"
+	@echo "... pkgall Exewcutes pkg, pkgtar, pkgsrc"
+	@echo "... tags Generates tag file"
+	@echo "... style Checks programming style"
+	@echo "... syn Syntax check"
+	@echo "... upx Compress using upx"
+	@echo "... loc Counts lines of code"
+	@echo "... var Lists all variables"

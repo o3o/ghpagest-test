@@ -23,10 +23,10 @@ interface IPlc {
    *     DB = The number of a data block
    *     start = The address of the first byte in the block.
    *     length = The number of bytes to read.
-   *			 
    *
-   * Returns: The function returns 0 on success. 
-   * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened. 
+   *
+   * Returns: The function returns 0 on success.
+   * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened.
    * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
    */
    void readBytes(in int DB, in int start, in int length);
@@ -73,7 +73,7 @@ class IsoTcp: IPlc {
          fds.rfd = sock.handle;
          fds.wfd = fds.rfd;
 
-         if (fds.rfd > 0) { 
+         if (fds.rfd > 0) {
             daveInterface* di = daveNewInterface(fds, "IF1", 0, daveProtoISOTCP, daveSpeed9k);
             daveSetTimeout(di, 5_000_000);
             enum int MPI = 0;
@@ -100,18 +100,18 @@ class IsoTcp: IPlc {
    /**
     * Reads a sequence of bytes from PLC memory.
     *
-    * Params:  
+    * Params:
     *    DB = The number of a data block
     *    start = The address of the first byte in the block.
     *    length = The number of bytes to read.
     *
-    * Returns: The function returns 0 on success. 
-    * Nonzero return codes may be passed to `strerror()` to get a textual explanation of what happened. 
-    * Generally, positive error codes represent errors reported by the PLC, 
+    * Returns: The function returns 0 on success.
+    * Nonzero return codes may be passed to `strerror()` to get a textual explanation of what happened.
+    * Generally, positive error codes represent errors reported by the PLC,
     * while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
     */
    void readBytes(in int DB, in int start, in int length) {
-      int err = daveReadBytes(dc, daveDB, DB, start, length, null);
+      const(int) err = daveReadBytes(dc, daveDB, DB, start, length, null);
       if (err != 0) {
          throw new NodaveException(err);
       }
@@ -150,7 +150,7 @@ class IsoTcp: IPlc {
 
    /**
     * Write a sequence of bytes from a buffer to PLC memory.
-    * Params:  
+    * Params:
     * DB = The number of a data block
     * start = The address of the first byte in the block.
     * length = The number of bytes to write.
@@ -169,11 +169,11 @@ class IsoTcp: IPlc {
    *
    *
    * Params:  param = param description
-   *			 
+   *
    *
    * Returns: return value
    *
-   * Throws:  Exception 
+   * Throws:  Exception
    */
    int readPLCTime() {
       return daveReadPLCTime(dc);
@@ -201,7 +201,7 @@ class IsoTcp: IPlc {
 }
 
 class NodaveException: Exception {
-   this(int errNo){
+   this(int errNo) {
       string message = strerror(errNo);
       this(message);
    }

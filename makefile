@@ -32,7 +32,6 @@ MKDIR = mkdir -p
 RM = -rm -f
 UPX = upx --no-progress
 
-<<<<<<< HEAD
 ## flags
 DUBFLAGS = -q --combined
 
@@ -53,13 +52,13 @@ run:
 	$(DUB) run $(DUBFLAGS)
 
 test:
-	$(DUB) test $(DUBFLAGS)
+	$(DUB) test 
 
 upx: $(BIN)/$(NAME)
 	$(UPX) $@
 
 pkgdir:
-	@mkdir -p pkg
+	$(MKDIR) pkg
 
 pkgall: pkg pkgtar pkgsrc
 
@@ -77,62 +76,6 @@ pkgsrc: pkgdir | pkg/$(ZIP_PREFIX)-src.tar.bz2
 
 pkg/$(ZIP_PREFIX)-src.tar.bz2: $(ZIP_SRC)
 	tar -jcf $@ $^
-=======
-BITS ?= $(shell getconf LONG_BIT)
-DCFLAGS += -m$(BITS)
-
-getSources = $(shell find $(ROOT_SOURCE_DIR) -name "*.d")
-
-# Version flag
-# use: make V=x
-# -----------
-VERSION_FLAG += $(if $(V), -version=$(V), )
-
-.PHONY: all clean clobber test testv run pkg pkgsrc tags syn style loc var ver help release
-
-all: builddir $(BIN)/$(NAME_DEBUG)
-release: builddir $(BIN)/$(NAME_REL)
-
-builddir:
-	@$(MKDIR) $(BIN)
-
-$(BIN)/$(NAME_DEBUG): $(SRC) $(LIB)| builddir
-	$(DC) $^ $(VERSION_FLAG) $(DCFLAGS) $(DCFLAGS_IMPORT) $(DCFLAGS_LINK) $(DCFLAGS_J) $(OUTPUT)$@
-
-$(BIN)/$(NAME_REL): $(SRC) $(LIB)| builddir
-	$(DC) $^ $(VERSION_FLAG) $(DCFLAGS_REL) $(DCFLAGS_IMPORT) $(DCFLAGS_LINK) $(DCFLAGS_J) $(OUTPUT)$@
-ifdef COMPRESS
-	$(UPX) $@
-endif
-
-
-run: all
-	$(BIN)/$(NAME_DEBUG)
-
-## with unit_threaded:
-## make test T=test_name
-test: build_test
-	@$(BIN)/$(NAME_TEST) $(T)
-
-testv: build_test
-	@$(BIN)/$(NAME_TEST) -d $(T)
-
-build_test: $(BIN)/$(NAME_TEST)
-
-$(BIN)/$(NAME_TEST): $(SRC_TEST) $(LIB_TEST)| builddir
-	$(DC) $^ $(VERSION_FLAG) $(DCFLAGS_TEST) $(DCFLAGS_IMPORT_TEST) $(DCFLAGS_LINK) $(DCFLAGS_J) $(OUTPUT)$@
-
-pkgdir:
-	$(MKDIR) pkg
-
-pkg: $(PKG) | pkgdir
-	tar -jcf pkg/$(NAME)-$(PROJECT_VERSION).tar.bz2 $^
-	zip pkg/$(NAME)-$(PROJECT_VERSION).zip $^
-
-pkgsrc: $(PKG_SRC) | pkgdir
-	tar -jcf pkg/$(NAME)-$(PROJECT_VERSION)-src.tar.bz2 $^
->>>>>>> d6e563c6b9ab3f7f459cf29e350061db468c6853
-
 tags: $(SRC)
 	$(DSCAN) --ctags $^ > tags
 
@@ -146,27 +89,18 @@ loc: $(SRC)
 	$(DSCAN) --sloc $^
 
 clean:
-<<<<<<< HEAD
 	$(DUB) clean
 
 clobber: clean
 	$(RM) $(BIN)/$(NAME)
-=======
-	$(RM) $(BIN)/*.o
 	$(RM) $(BIN)/*.log
-	$(RM) $(BIN)/__*
-	$(RM) $(BIN)/$(NAME_TEST)
+	$(RM) $(BIN)/test-runner
 
-clobber: clean
-	$(RM) $(BIN)/$(NAME_REL)
-	$(RM) $(BIN)/$(NAME_DEBUG)
->>>>>>> d6e563c6b9ab3f7f459cf29e350061db468c6853
 
 ver:
 	@echo $(PROJECT_VERSION)
 
 var:
-<<<<<<< HEAD
 	@echo NAME:       $(NAME)
 	@echo PRJ_VER:    $(PROJECT_VERSION)
 	@echo BASE_NAME:  $(BASE_NAME)
@@ -184,40 +118,11 @@ var:
 	@echo 
 	@echo ==== src ===
 	@echo SRC:   $(SRC)
-=======
-	@echo
-	@echo NAME:       $(NAME)
-	@echo NAME_DEBUG: $(NAME_DEBUG)
-	@echo NAME_REL:   $(NAME_REL)
-	@echo TARGET:     $(TARGET)
-	@echo COMPRESS:   $(COMPRESS)
-	@echo PRJ_VER:    $(PROJECT_VERSION)
-	@echo
-	@echo D_DIR: $(D_DIR)
-	@echo BIN:   $(BIN)
-	@echo SRC:   $(SRC)
-	@echo LIB:   $(LIB)
-	@echo
-	@echo DC:      $(DC)
-	@echo DCFLAGS: $(DCFLAGS)
-	@echo DCFLAGS_LINK: $(DCFLAGS_LINK)
-	@echo DCFLAGS_IMPORT: $(DCFLAGS_IMPORT)
-	@echo VERSION: $(VERSION_FLAG)
-	@echo
-	@echo ==== test ===
-	@echo NAME_TEST: $(NAME_TEST)
-	@echo SRC_TEST: $(SRC_TEST)
-	@echo DCFLAGS_IMPORT_TEST: $(DCFLAGS_IMPORT_TEST)
-	@echo LIB_TEST: $(LIB_TEST)
-	@echo
-	@echo T: $(T)
->>>>>>> d6e563c6b9ab3f7f459cf29e350061db468c6853
 
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
-<<<<<<< HEAD
 	@echo "... release Compiles in release mode"
 	@echo "... force  Forces a recompilation"
 	@echo "... test Executes the tests"
@@ -227,22 +132,10 @@ help:
 	@echo "... pkg Zip binary"
 	@echo "... pkgtar Tar binary"
 	@echo "... pkgsrc Tar source"
-	@echo "... pkgall Exewcutes pkg, pkgtar, pkgsrc"
+	@echo "... pkgall Executes pkg, pkgtar, pkgsrc"
 	@echo "... tags Generates tag file"
 	@echo "... style Checks programming style"
 	@echo "... syn Syntax check"
-=======
-	@echo "... test"
-	@echo "... testv Runs unitt_threded test in verbose (-debug) mode"
-	@echo "... run"
-	@echo "... clean"
-	@echo "... clobber"
-	@echo "... pkg Generates a binary package"
-	@echo "... pkgsrc Generates a source package"
-	@echo "... tags Generates tag file"
-	@echo "... style Checks programming style"
-	@echo "... syn"
->>>>>>> d6e563c6b9ab3f7f459cf29e350061db468c6853
 	@echo "... upx Compress using upx"
 	@echo "... loc Counts lines of code"
 	@echo "... var Lists all variables"

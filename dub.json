@@ -8,7 +8,7 @@
    "targetType": "library",
    "libs-posix": ["nodave"],
    "sourceFiles-windows-x86-dmd": ["lib/libnodave.lib"],
-   "copyFiles": ["lib/libnodave.dll"],
+   "copyFiles-windows": ["lib/libnodave.dll"],
    "configurations": [
       {
          "name": "library",
@@ -23,7 +23,6 @@
          "excludedSourceFiles": ["src/app.d"],
          "dependencies": {
             "unit-threaded": "~>0.6.24"
-            "unit-threaded": "~>0.6.11"
          }
       }
    ]

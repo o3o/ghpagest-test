@@ -23,6 +23,7 @@
          "excludedSourceFiles": ["src/app.d"],
          "dependencies": {
             "unit-threaded": "~>0.6.24"
+            "unit-threaded": "~>0.6.11"
          }
       }
    ]

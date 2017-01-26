@@ -1,8 +1,7 @@
 language: d
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libnodave
+  - ./install-libnodave.sh
 
 script:
    - dub test -b unittest-cov --compiler=${DC}

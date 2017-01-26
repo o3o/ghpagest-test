@@ -1,5 +1,7 @@
 # dinodave
 [![Build Status](https://travis-ci.org/o3o/dinodave.svg?branch=master)](https://travis-ci.org/o3o/dinodave)
+[![Dub version](https://img.shields.io/dub/v/dinodave.svg)](https://code.dlang.org/packages/dinodave)
+[![Dub download Status](https://img.shields.io/dub/dt/dinodave.svg)](https://code.dlang.org/packages/dinodave)
 
 A simple D binding to [LIBNODAVE, a free library to communicate to Siemens S7 PLCs](https://github.com/netdata/libnodave)
 
@@ -91,4 +93,4 @@ $ make
 $ sudo make install
 ```
 
-
+or use `install-libnodave.sh`

@@ -1,21 +1,19 @@
-# dinodave
+]dinodave
 [![Build Status](https://travis-ci.org/o3o/dinodave.svg?branch=master)](https://travis-ci.org/o3o/dinodave)
 
 A simple D binding to [LIBNODAVE, a free library to communicate to Siemens S7 PLCs](https://github.com/netdata/libnodave)
 
-# Compiling
+## Compiling
 With dub:
 
 ```sh
 $ dub build
 ```
 with make (_linux_):
-
 ```sh
 $ make
 ```
 (_win32_)
-
 ```sh
 $ make -f makefile.win32
 ```
@@ -35,7 +33,7 @@ with make (only for linux):
 $ make test
 ```
 
-# Example usage
+## Example usage
 ```D
 import std.stdio;
 import dinodave;
@@ -62,3 +60,12 @@ void main(string[] args) {
 ```
 
 See also directory `examples/` and [wiki](https://github.com/o3o/dinodave/wiki/).
+
+## Install libnodave
+
+```
+$ git clone git@github.com:netdata/libnodave.git
+$ cd libnodave
+$ make
+$ sudo make install
+```

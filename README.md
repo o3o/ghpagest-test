@@ -61,6 +61,27 @@ void main(string[] args) {
 
 See also directory `examples/` and [wiki](https://github.com/o3o/dinodave/wiki/).
 
+## Compiling and running code examples
+
+The code examples in `examples` directory are simple applications that perform simple PLC operations
+
+For some examples (`float` and `read_write`) dub includes subpackage, so to compile:
+
+```
+$ make s=float
+```
+or
+```
+$ dub build dinodave:float
+````
+
+for the other examples:
+```
+$ cd examples/x
+$ make
+```
+
+
 ## Install libnodave
 
 ```
@@ -69,3 +90,5 @@ $ cd libnodave
 $ make
 $ sudo make install
 ```
+
+

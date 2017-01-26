@@ -1,0 +1,12 @@
+name "float"
+description "Simple float example"
+authors "Orfeo Da Viá"
+copyright "Copyright © 2017, o3o"
+license "LGPL v3.0.0"
+dependency "dinodave" path="../../bin/"
+
+targetType "executable"
+targetPath "bin"
+libs "nodave" platform="posix"
+sourceFiles "../../lib/libnodave.lib" platform="windows-x86_32-dmd"
+copyFiles "../../lib/libnodave.dll" platform="windows-x86_32-dmd"

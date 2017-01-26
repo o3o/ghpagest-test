@@ -22,3 +22,17 @@ configuration "unittest" {
 	sourcePaths "tests" "src"
 	excludedSourceFiles "src/app.d"
 }
+
+subPackage "examples/float"
+subPackage "examples/read_write"
+
+// dub run dinodave:float
+// subPackage {
+// 	name "float"
+// 	description "Simple float example"
+//    dependency "dinodave" version="~>0.2.0"
+// 	targetType "executable"
+//    targetPath "bin"
+// 	sourceFiles "examples/float/src/app.d"
+//    libs "nodave" platform="posix"
+// }

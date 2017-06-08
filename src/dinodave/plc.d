@@ -1,17 +1,20 @@
+/**
+*
+* This module defines interfaces and classes that wrap nodave functios and procedures.
+*/
 module dinodave.plc;
 
 import std.conv;
-import std.socket;
-import std.string;
-import std.stdio;
 import std.datetime;
-import std.conv;
+import std.socket;
+import std.stdio;
+import std.string;
 
 import dinodave.nodave;
 import dinodave.helper;
 
 /**
-*  Representing the physical connection to a PLC
+* Representing the physical connection to a PLC
 */
 interface IPlc {
    void openConnection();
@@ -19,37 +22,56 @@ interface IPlc {
    /**
    * Reads a sequence of bytes from PLC memory.
    *
-   * Params:  param = param description
-   *     DB = The number of a data block
-   *     start = The address of the first byte in the block.
-   *     length = The number of bytes to read.
+   * Params:
+   *  DB = The number of a data block
+   *  start = The address of the first byte in the block.
+   *  length = The number of bytes to read.
    *
    *
    * Returns: The function returns 0 on success.
    * Nonzero return codes may be passed to daveStrerror() to get a textual explanation of what happened.
-   * Generally, positive error codes represent errors reported by the PLC, while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
+   * Generally, positive error codes represent errors reported by the PLC,
+   * while negative ones represent errors detected by LIBNODAVE, e.g. no response from the PLC.
    */
    void readBytes(in int DB, in int start, in int length);
+   ///
    byte getS8();
+   ///
    ubyte getU8();
+   ///
    short getS16();
+   ///
    ushort getU16();
+   ///
    int getS32();
+   ///
    uint getU32();
+   ///
    float getFloat();
 
+   ///
    byte getS8At(int position);
+   ///
    ubyte getU8At(int position);
+   ///
    short getS16At(int position);
+   ///
    ushort getU16At(int position);
+   ///
    int getS32At(int position);
+   ///
    uint getU32At(int position);
+   ///
    float getFloatAt(int position);
 
+   ///
    void setBit(in int DB, in int byteAddress, in int bitAddress);
+   ///
    void clearBit(in int DB, in int byteAddress, in int bitAddress);
 
+   ///
    void writeBytes(int DB, int start, int length, ubyte[] buffer);
+   ///
    int readPLCTime();
 }
 
@@ -164,17 +186,8 @@ class IsoTcp: IPlc {
    }
 
    /**
-   * Read PLC data time.
-   *
-   *
-   *
-   * Params:  param = param description
-   *
-   *
-   * Returns: return value
-   *
-   * Throws:  Exception
-   */
+    * Read PLC data time.
+    */
    int readPLCTime() {
       return daveReadPLCTime(dc);
    }
@@ -200,6 +213,9 @@ class IsoTcp: IPlc {
    }
 }
 
+/**
+* NoDave exception
+*/
 class NodaveException: Exception {
    this(int errNo) {
       string message = strerror(errNo);
@@ -210,3 +226,31 @@ class NodaveException: Exception {
       super(message, file, line, next);
    }
 }
+
+daveConnection* createConnection(in string ip, in int port = 102) {
+   daveConnection* dc;
+   try {
+      auto sock = new TcpSocket(new InternetAddress(ip, to!(ushort)(port)));
+      _daveOSserialType fds;
+      fds.wfd = fds.rfd = sock.handle;
+
+      if (fds.rfd > 0) {
+         daveInterface* di = daveNewInterface(fds, "IF1", 0, daveProtoISOTCP, daveSpeed9k);
+         daveSetTimeout(di, 5_000_000);
+         enum int MPI = 0;
+         enum int RACK = 0;
+         enum int SLOT = 2;
+         dc = daveNewConnection(di, MPI, RACK, SLOT);
+         if (daveConnectPLC(dc) != 0) {
+            throw new NodaveException("Couldn't connect to PLC with ip " ~ ip);
+         }
+         return dc;
+      } else {
+         throw new NodaveException("Couldn't open TCP port. Please make sure a CP is connected and the IP address is ok.");
+      }
+
+   } catch(Exception e) {
+      throw new NodaveException("Generic exception");
+   }
+}
+

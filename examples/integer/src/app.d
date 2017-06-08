@@ -22,11 +22,11 @@ void main(string[] args) {
 
       ubyte[80] buf;
       enum int BYTES_PER_DINT = 4;
-      
+
       for (int i = 0; i < 20; ++i) {
          //buf ~= nativeToBigEndian(i * BYTES_PER_DINT + 2);
          put32At(buf, i * BYTES_PER_DINT, i * BYTES_PER_DINT + 2);
-      }      
+      }
       s7.writeBytes(DB, ADDR, 20 * BYTES_PER_DINT, buf);
 
       s7.readBytes(DB, ADDR, 20 * BYTES_PER_DINT);

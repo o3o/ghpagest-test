@@ -1,10 +1,16 @@
+/**
+* This module contains bindings to types and functions from the nodave C header <nodavesimple.h>.
+*/
+
 module dinodave.nodave;
 
 import std.stdio;
 import core.stdc.stdio;
 import core.stdc.stdlib;
 
-enum daveProtoISOTCP	= 122;	/* ISO over TCP */
+enum daveProtoISOTCP = 122;   /** ISO over TCP */
+
+/** ProfiBus/MPI speed constants to be used with newInterface */
 enum daveSpeed9k = 0;
 enum daveSpeed19k = 1;
 enum daveSpeed187k = 2;
@@ -17,14 +23,14 @@ enum daveP = 0x80;
 enum daveInputs = 0x81;
 enum daveOutputs = 0x82;
 enum daveFlags = 0x83;
-enum daveDB = 0x84;	/* data blocks */
-enum daveDI = 0x85;	/* instance data blocks */
-enum daveLocal = 0x86; 	/* not tested */
-enum daveV = 0x87;	/* don't know what it is */
-enum daveCounter = 28;	/* S7 counters */
-enum daveTimer = 29;	/* S7 timers */
-enum daveCounter200 = 30;	/* IEC counters (200 family) */
-enum daveTimer200 = 31;		/* IEC timers (200 family) */
+enum daveDB = 0x84;  /** Data blocks */
+enum daveDI = 0x85;  /** Instance data blocks */
+enum daveLocal = 0x86;  /* not tested */
+enum daveV = 0x87;   /* don't know what it is */
+enum daveCounter = 28;  /** S7 counters */
+enum daveTimer = 29; /** S7 timers */
+enum daveCounter200 = 30;  /* IEC counters (200 family) */
+enum daveTimer200 = 31;    /* IEC timers (200 family) */
 
 extern (C):
 
@@ -47,10 +53,39 @@ struct PDU {
    int udlen;
 }
 
+/**
+* A structure representing the physical connection to a PLC or a network of PLCs (e.g. like MPI).
+* daveInterface stores all those properties that are common to a network of PLCs:
+* - The local address used by your computer.
+* - The speed used in this network.
+* - The protocol type used in this network.
+* - A name which is used when printing out debug messages.
+*
+* The structure daveInterface is created and initialized by daveNewInterface:
+*
+* --------------------
+* daveInterface* di;
+* di = daveNewInterface(fds, "IF1", localMPI, daveProtoXXX, daveSpeedYYY);
+* --------------------
+*
+* or in D
+* --------------------
+* auto sock = new TcpSocket(new InternetAddress(ip, to!(ushort)(port)));
+* fds.wfd = fds.rfd = sock.handle;
+* daveInterface* di = daveNewInterface(fds, "IF1", 0, daveProtoISOTCP, daveSpeed9k);
+* --------------------
+*/
 struct _daveInterface {
    int _timeout;
 }
 
+/**
+* A structure representing the physical connection to a single PLC.
+* daveConnection stores all properties that are unique to a single PLC:
+* - The MPI address of this PLC.
+* - The rack the PLC is in.
+* - The slot the PLC is in.
+*/
 struct _daveConnection {
    int AnswLen;
    ubyte* resultPointer;
@@ -121,6 +156,20 @@ float daveGetFloatAt(daveConnection* dc, int pos);
 int daveSetBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
 int daveClrBit(daveConnection* dc, int area, int DB, int byteAdr, int bitAdr);
 
+/**
+ * Read len bytes from the PLC.
+ *
+ * Params:
+ *  dc = A daveConnection
+ *  area = Denotes whether the data comes from FLAGS, DATA BLOCKS,
+ *  DB = The number of the data block to be used. Set it to zero
+ *  start = First byte.
+ *  len = Number of bytes to read
+ *  buffer = Pointer to a memory block provided by the calling program.
+ *           If the pointer is not NULL, the result data will be copied thereto.
+ *           Hence it must be big enough to take up the result.
+ *
+ */
 int daveReadBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, void* buffer);
 
@@ -190,7 +239,29 @@ char* daveStrerror(int code);
 void daveStringCopy(char* intString, char* extString);
 void daveSetDebug(int nDebug);
 int daveGetDebug();
+
+/**
+ * Create a daveInterface structure.
+ *
+ * Params:
+ *  nfd = a _daveOSserialType
+ *  nname = Interface name
+ *  localMPI = The address used by your computer/adapter (only meaningful for MPI and PPI)
+ *  protocol = a constant specifying the protocol to be used on this interface
+ *  speed = a constant specifying the speed to be used on this interface. (only meaningful for MPI and Profibus)
+ */
 daveInterface* daveNewInterface(_daveOSserialType nfd, const(char)* nname, int localMPI, int protocol, int speed);
+
+/**
+ * Setup a new connection structure using an initialized
+ * daveInterface and PLC's MPI address.
+ *
+ * Params:
+ *  di = a daveInterface
+ *  MPI = the address of the PLC (only meaningful for MPI and PPI).
+ *  rack = The rack the CPU is mounted in (normally 0, only meaningful for ISO over TCP).
+ *  slot =The slot number the CPU is mounted in (normally 2, only meaningful for ISO over TCP)
+ */
 daveConnection* daveNewConnection(daveInterface* di, int MPI, int rack, int slot);
 int daveGetResponse(daveConnection* dc);
 int daveSendMessage(daveConnection* dc, PDU* p);
@@ -203,4 +274,3 @@ short daveSwapIed_16(short ff);
 int daveSwapIed_32(int ff);
 float toPLCfloat(float ff);
 int daveToPLCfloat(float ff);
-

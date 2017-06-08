@@ -176,7 +176,35 @@ int daveWriteBytes(daveConnection* dc, int area, int DB, int start, int len, voi
 int daveReadPLCTime(daveConnection* dc);
 // ---------
 
+
+/**
+* Get time in seconds from current read position
+*/
 float daveGetSeconds(daveConnection* dc);
+
+/**
+ * Get time in seconds from random position
+ *
+ * Params:
+ *  dc = a daveConnection
+ *  pos = Position in bytes
+ *
+ * Examples:
+ * --------------------
+ * // read 4 timers: each timer has 2 bytes
+ * const(int) res = daveReadBytes(dc, daveTimer, 0, 0, 4, null);
+ * // read second of timer 2
+ * float d = daveGetSecondsAt(dc, 4);
+ * // 4 because:
+ * // | pos | timer   |
+ * // | 0   | timer 0 |
+ * // | 1   | timer 0 |
+ * // | 2   | timer 1 |
+ * // | 3   | timer 1 |
+ * // | 4   | timer 2 | <----
+ * // | 5   | timer 2 |
+ * --------------------
+ */
 float daveGetSecondsAt(daveConnection* dc, int pos);
 int daveGetCounterValue(daveConnection* dc);
 int daveGetCounterValueAt(daveConnection* dc, int pos);

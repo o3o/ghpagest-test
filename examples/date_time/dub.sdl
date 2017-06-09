@@ -1,5 +1,5 @@
-name "float"
-description "dinodave float read/write example"
+name "date_time"
+description "dinodave data time read/write example"
 authors "Orfeo Da Viá"
 
 copyright "Copyright © 2017, o3o"

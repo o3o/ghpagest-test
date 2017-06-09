@@ -1,5 +1,5 @@
-name "float"
-description "dinodave float read/write example"
+name "read_int32"
+description "dinodave integer read/write example"
 authors "Orfeo Da Viá"
 
 copyright "Copyright © 2017, o3o"

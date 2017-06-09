@@ -14,8 +14,9 @@ void main(string[] args) {
       ip = args[1];
    }
 
-
    try {
+      writeln("use ip ", ip);
+
       auto s7 = new IsoTcp(ip);
       s7.openConnection();
       scope(exit) s7.closeConnection();

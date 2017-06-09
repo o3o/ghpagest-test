@@ -4,3 +4,5 @@ bin
 *.obj
 tags
 dub.selections.json
+examples/integer/integer
+examples/integer/libnodave.dll

@@ -1,0 +1,5 @@
+name "integer"
+description "dinodave integer read/write example"
+authors "Orfeo Da Viá"
+copyright "Copyright © 2014, o3o"
+dependency "dinodave" version=">=0.2.0"

@@ -1,7 +1,8 @@
 import std.stdio;
-import dinodave;
 import std.conv;
 import std.bitmanip;
+
+import dinodave;
 
 void main(string[] args) {
    enum string IP = "192.168.221.102";

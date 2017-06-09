@@ -1,9 +1,0 @@
-{
-	"name": "integer",
-	"description": "dinodave integer read/write example",
-	"copyright": "Copyright © 2014, o3o",
-	"authors": ["Orfeo Da Viá"],
-	"dependencies": {
-      "dinodave": ">=0.1.0"
-	}
-}

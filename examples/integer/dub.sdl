@@ -1,5 +1,7 @@
 name "integer"
 description "dinodave integer read/write example"
 authors "Orfeo Da Viá"
-copyright "Copyright © 2014, o3o"
-dependency "dinodave" version=">=0.2.0"
+
+copyright "Copyright © 2017, o3o"
+license "LGPL v3.0.0"
+dependency "dinodave" path="../../"

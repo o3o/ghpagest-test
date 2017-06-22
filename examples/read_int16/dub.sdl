@@ -1,0 +1,7 @@
+name "read_int16"
+description "dinodave int16 read/write example"
+authors "Orfeo Da Viá"
+
+copyright "Copyright © 2017, o3o"
+license "LGPL v3.0.0"
+dependency "dinodave" path="../../"

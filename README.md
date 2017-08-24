@@ -83,6 +83,9 @@ $ cd examples/x
 $ make
 ```
 
+## Documentation
+The documentation is generated automatically (ddox) and is accessible by reference [documentation API](https://o3o.github.io/ghpagest-test/)
+
 
 ## Install libnodave
 
